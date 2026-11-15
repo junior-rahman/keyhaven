@@ -1,0 +1,13 @@
+[workspace]
+resolver = "3"
+members = ["crates/kh-core", "crates/kh-win", "crates/kh-ffi"]
+# kh-win only builds on Windows; keep plain `cargo test` working on any OS.
+default-members = ["crates/kh-core", "crates/kh-ffi"]
+
+[workspace.lints.rust]
+unsafe_code = "deny"   # kh-win overrides this locally; every unsafe block needs a // SAFETY: comment
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"

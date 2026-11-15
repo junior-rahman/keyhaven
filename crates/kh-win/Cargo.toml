@@ -1,0 +1,8 @@
+[package]
+name = "kh_win"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+windows = { version = "0.62.2", features = ["Win32_Foundation", "Win32_System_Pipes", "Win32_System_Threading", "Win32_System_WinRT", "Win32_Security", "Security_Credentials_UI", "Security_Credentials", "Security_Cryptography", "Storage_Streams", "Foundation", "Win32_System_Diagnostics_ToolHelp", "Security_Cryptography_Core"] }
+windows-future = "0.100.0"

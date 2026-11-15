@@ -1,0 +1,41 @@
+{
+  "secret_key": "000102030405060708090a0b0c0d0e0f",
+  "salt_b64": "EBESExQVFhcYGRobHB0eHw",
+  "kdf": [
+    {
+      "password": "correct horse battery staple",
+      "passes": 3,
+      "memory_kib": 8192,
+      "master": "4deb00f19f82e81838a08ae921652d0d01910a33f87271745c8b5bbc47d82953",
+      "auth": "f3a66db5afe9e81000f34145946009c55fba0e3f83255c42d89f0a819c76bfa0",
+      "kek": "abc770a7efd22e998d6e7bca65410b1eca6f6e0d15644e0531f360fbf753e755"
+    },
+    {
+      "password": "correct horse battery staple",
+      "passes": 3,
+      "memory_kib": 262144,
+      "master": "abae36b2eccda7e03cec310dfa7f690550b1b5d618111c015cd827cb881f3bda",
+      "auth": "3f6e2235931cdae9fb366bc355940f82330c244428e17f40af0c67b6e457f6cc",
+      "kek": "1dee5c7c6709b433fbec08b898b5a9fcb0f61af40ad5a67994d0ab3aa1880f5e"
+    },
+    {
+      "password": "pässwörd ﬁ①",
+      "passes": 3,
+      "memory_kib": 8192,
+      "master": "ef3f354eea20529df727fc832d24beb15ae23ef605be6356721b87fb818a7bb9",
+      "auth": "8af29aea99f8d7880d3d8d8aba50bba2ac9154afa4d71a99495e142d8628f2dd",
+      "kek": "eb3d1799b7343ca00243fade5eacf7f05f69935bbc7ebf4e8182337524ba1ab7"
+    }
+  ],
+  "aead": {
+    "key": "abc770a7efd22e998d6e7bca65410b1eca6f6e0d15644e0531f360fbf753e755",
+    "nonce_b64": "QEFCQ0RFRkdISUpLTE1OT1BRUlNUVVZX",
+    "aad": "kh/v1/item/0192f3a0-0000-7000-8000-00000000000a/0192f3a0-0000-7000-8000-000000000001/7",
+    "plaintext": "keyhaven test vector",
+    "sealed": {
+      "v": 1,
+      "n": "QEFCQ0RFRkdISUpLTE1OT1BRUlNUVVZX",
+      "c": "PTO-_YqPRzemxm3L-r2N3cm5TygMOts_Kic9HeVBnDzsPrbN"
+    }
+  }
+}

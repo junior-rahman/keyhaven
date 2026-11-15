@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./**/*.token)",
+      "Read(./**/.env*)",
+      "Read(./**/*.kh)",
+      "Edit(./crates/kh-core/test-vectors/**)",
+      "Bash(git push --force:*)"
+    ],
+    "ask": [
+      "Bash(git push:*)"
+    ]
+  }
+}
