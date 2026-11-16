@@ -1,6 +1,6 @@
 // crates/kh-store/src/manifest.rs
-use blake2::digest::{consts::U32, Digest};
 use blake2::Blake2b;
+use blake2::digest::{Digest, consts::U32};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 /// It is rewritten in the same SQLite transaction as the row it describes.
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct Manifest {
-    pub counter: u64,                    // +1 on every write; devices and the sync server remember the highest seen
+    pub counter: u64, // +1 on every write; devices and the sync server remember the highest seen
     pub rows: BTreeMap<String, RowMark>, // item ids and sealed-document names
     pub audit_head: Option<(i64, String)>,
 }
@@ -58,9 +58,13 @@ mod tests {
         let mut manifest = Manifest::default();
 
         // version 1: visible to AI; version 2: you turned that off
-        let v1 = serde_json::to_string(&seal(&item_key, br#"{"ai":{"visible":true}}"#, &aad::item_body(vault, item, 1))).unwrap();
+        let v1 =
+            serde_json::to_string(&seal(&item_key, br#"{"ai":{"visible":true}}"#, &aad::item_body(vault, item, 1)))
+                .unwrap();
         manifest.record(item, 1, &v1);
-        let v2 = serde_json::to_string(&seal(&item_key, br#"{"ai":{"visible":false}}"#, &aad::item_body(vault, item, 2))).unwrap();
+        let v2 =
+            serde_json::to_string(&seal(&item_key, br#"{"ai":{"visible":false}}"#, &aad::item_body(vault, item, 2)))
+                .unwrap();
         manifest.record(item, 2, &v2);
         assert_eq!(manifest.check(item, 2, &v2), RowCheck::Current);
 

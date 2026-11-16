@@ -1,0 +1,17 @@
+{
+  "name": "@keyhaven/relay",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Remote MCP relay. Stores no vault data; forwards to the desktop core.",
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/node": "2.1.2",
+    "@modelcontextprotocol/server": "2.4.0",
+    "zod": "4.6.7"
+  }
+}

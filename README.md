@@ -9,7 +9,10 @@ A local-first password manager for Windows 11, Android and Chrome/Edge. It inclu
 ## Quick start
 
 ```
-cargo test        # 14 core tests (crypto vectors, policy table, site matching, audit, manifest, approvals)
+cargo test --workspace          # 14 core tests (crypto vectors, policy table, site matching, audit, manifest, approvals)
+pnpm install && pnpm -r lint && pnpm -r typecheck && pnpm -r test
 ```
+
+The full check commands are in `CLAUDE.md`. Progress per phase is in `docs/PROGRESS.md`, and decisions in `docs/DECISIONS.md`.
 
 Then open the folder in Claude Code and paste the Kickoff prompt from `docs/PROMPTS.md`.

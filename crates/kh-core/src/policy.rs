@@ -30,8 +30,8 @@ pub enum Deny {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Caller {
-    Owner,     // a click inside the Keyhaven window
-    Extension, // your click in the paired browser extension
+    Owner,                                                    // a click inside the Keyhaven window
+    Extension,                                                // your click in the paired browser extension
     Cli { console_grant: bool }, // `kh` in a terminal; a grant covers one console and expires
     Ai { read: bool, write: bool, fill: bool, reveal: bool }, // a paired MCP client and its scopes
 }
@@ -54,7 +54,9 @@ pub fn decide(caller: Caller, item: Option<&ItemPayload>, action: Action, s: &Se
         Caller::Owner | Caller::Extension => Ok(if releases_secret && s.strict { Gate::Presence } else { Gate::Open }),
 
         // A terminal is not proof that it is you: an AI agent with a shell can run `kh` as well.
-        Caller::Cli { console_grant } => Ok(if releases_secret || !console_grant { Gate::Presence } else { Gate::Open }),
+        Caller::Cli { console_grant } => {
+            Ok(if releases_secret || !console_grant { Gate::Presence } else { Gate::Open })
+        }
 
         Caller::Ai { read, write, fill, reveal } => {
             if !s.ai_enabled {
@@ -92,6 +94,9 @@ mod tests {
     const AI: Caller = Caller::Ai { read: true, write: true, fill: true, reveal: true };
     const STD: Settings = Settings { locked: false, strict: false, ai_enabled: true, ai_reveal_enabled: false };
 
+    /// One row of the decision table: who asks, about which item, to do what, under which settings, and the answer.
+    type Case<'a> = (Caller, Option<&'a ItemPayload>, Action, &'a Settings, Result<Gate, Deny>);
+
     fn item(json: &str) -> ItemPayload {
         serde_json::from_str(json).unwrap()
     }
@@ -109,7 +114,7 @@ mod tests {
         let cli_granted = Caller::Cli { console_grant: true };
         let read_only = Caller::Ai { read: true, write: false, fill: false, reveal: false };
 
-        let cases: &[(Caller, Option<&ItemPayload>, Action, &Settings, Result<Gate, Deny>)] = &[
+        let cases: &[Case] = &[
             // AI clients
             (AI, None, Search, &STD, Ok(Gate::Open)),
             (AI, Some(&bank), ReadMeta, &STD, Err(Deny::NotFound)),
@@ -148,13 +153,18 @@ mod tests {
 
     #[test]
     fn no_ai_or_cli_path_reaches_a_secret_without_presence() {
-        let all_open = item(r#"{"type":"login","title":"x","ai":{"visible":true,"fill":"ask","totp":"ask","reveal":"ask"}}"#);
+        let all_open =
+            item(r#"{"type":"login","title":"x","ai":{"visible":true,"fill":"ask","totp":"ask","reveal":"ask"}}"#);
         for strict in [false, true] {
             for ai_reveal_enabled in [false, true] {
                 let s = Settings { locked: false, strict, ai_enabled: true, ai_reveal_enabled };
                 for caller in [AI, Caller::Cli { console_grant: true }, Caller::Cli { console_grant: false }] {
                     for action in [Fill, Totp, Reveal] {
-                        assert_ne!(decide(caller, Some(&all_open), action, &s), Ok(Gate::Open), "{caller:?} {action:?}");
+                        assert_ne!(
+                            decide(caller, Some(&all_open), action, &s),
+                            Ok(Gate::Open),
+                            "{caller:?} {action:?}"
+                        );
                     }
                 }
             }

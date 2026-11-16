@@ -1,9 +1,9 @@
 // crates/kh-store/src/audit.rs
 use crate::aead::seal;
-use crate::keys::{derive_subkey, Key};
-use blake2::digest::{consts::U32, KeyInit, Mac};
+use crate::keys::{Key, derive_subkey};
 use blake2::Blake2bMac;
-use rusqlite::{params, Connection};
+use blake2::digest::{KeyInit, Mac, consts::U32};
+use rusqlite::{Connection, params};
 use subtle::ConstantTimeEq;
 
 const GENESIS: &str = "0000000000000000000000000000000000000000000000000000000000000000";
@@ -30,7 +30,11 @@ pub struct AuditLog<'a> {
 
 impl<'a> AuditLog<'a> {
     pub fn new(db: &'a Connection, vault_key: &Key) -> Self {
-        Self { db, seal_key: derive_subkey(vault_key, 1, b"KHAUDIT1"), mac_key: derive_subkey(vault_key, 2, b"KHAUDIT1") }
+        Self {
+            db,
+            seal_key: derive_subkey(vault_key, 1, b"KHAUDIT1"),
+            mac_key: derive_subkey(vault_key, 2, b"KHAUDIT1"),
+        }
     }
 
     fn link(&self, prev: &str, body: &str) -> String {
@@ -43,7 +47,8 @@ impl<'a> AuditLog<'a> {
     /// Appends one entry. Entries carry ids, tool names and decisions; never a secret value.
     pub fn write(&self, at: &str, entry: &serde_json::Value) -> Result<Head, AuditError> {
         let db_err = |e: rusqlite::Error| AuditError::Db(e.to_string());
-        let body = serde_json::to_string(&seal(&self.seal_key, entry.to_string().as_bytes(), "kh/v1/audit")).expect("plain struct");
+        let body = serde_json::to_string(&seal(&self.seal_key, entry.to_string().as_bytes(), "kh/v1/audit"))
+            .expect("plain struct");
         let prev: Option<String> = self
             .db
             .query_row("SELECT mac FROM audit ORDER BY seq DESC LIMIT 1", [], |r| r.get(0))
@@ -51,7 +56,9 @@ impl<'a> AuditLog<'a> {
             .or_else(|e| if e == rusqlite::Error::QueryReturnedNoRows { Ok(None) } else { Err(e) })
             .map_err(db_err)?;
         let mac = self.link(prev.as_deref().unwrap_or(GENESIS), &body);
-        self.db.execute("INSERT INTO audit (at, body, mac) VALUES (?1, ?2, ?3)", params![at, body, mac]).map_err(db_err)?;
+        self.db
+            .execute("INSERT INTO audit (at, body, mac) VALUES (?1, ?2, ?3)", params![at, body, mac])
+            .map_err(db_err)?;
         Ok(Head { seq: self.db.last_insert_rowid(), mac })
     }
 
@@ -59,7 +66,9 @@ impl<'a> AuditLog<'a> {
     pub fn verify(&self, expected: Option<&Head>) -> Result<(), AuditError> {
         let db_err = |e: rusqlite::Error| AuditError::Db(e.to_string());
         let mut stmt = self.db.prepare("SELECT seq, body, mac FROM audit ORDER BY seq").map_err(db_err)?;
-        let rows = stmt.query_map([], |r| Ok((r.get::<_, i64>(0)?, r.get::<_, String>(1)?, r.get::<_, String>(2)?))).map_err(db_err)?;
+        let rows = stmt
+            .query_map([], |r| Ok((r.get::<_, i64>(0)?, r.get::<_, String>(1)?, r.get::<_, String>(2)?)))
+            .map_err(db_err)?;
         let mut prev = GENESIS.to_string();
         let mut last = None;
         for row in rows {

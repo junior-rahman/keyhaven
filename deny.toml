@@ -1,0 +1,46 @@
+# cargo-deny: run `cargo deny check` before adding or bumping any Rust dependency (CLAUDE.md).
+
+[graph]
+# Check every platform we ship on, so Windows-only crates (kh-win) are covered from Linux CI too.
+targets = [
+  "x86_64-pc-windows-msvc",
+  "aarch64-pc-windows-msvc",
+  "x86_64-unknown-linux-gnu",
+  "aarch64-linux-android",
+]
+all-features = true
+
+[advisories]
+# Vulnerabilities always fail. Unmaintained and unsound crates fail too, for every crate in the tree.
+unmaintained = "all"
+unsound = "all"
+yanked = "deny"
+ignore = []
+
+[licenses]
+confidence-threshold = 0.9
+allow = [
+  "MIT",
+  "Apache-2.0",
+  "Apache-2.0 WITH LLVM-exception",
+  "BSD-3-Clause",
+  # UniFFI (named in PLAN.md §3). File-level copyleft: only matters if we modify UniFFI's own files. DECISIONS.md D-006.
+  "MPL-2.0",
+  "Unicode-3.0",
+  "Zlib",
+]
+
+# Our own crates are publish = false and carry no license yet (the project license is undecided).
+[licenses.private]
+ignore = true
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+allow-wildcard-paths = true
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []

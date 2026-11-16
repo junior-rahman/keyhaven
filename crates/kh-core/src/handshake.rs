@@ -27,7 +27,10 @@ mod tests {
     #[test]
     fn matches_the_typescript_client() {
         let (cn, sn, token) = ([1u8; 32], [2u8; 32], [3u8; 32]);
-        assert_eq!(hex::encode(core_proof(&token, &cn, &sn)), "04015b7e21caea2a04b258c423d5984c7700acf37e50286387300d73e9f703bd");
+        assert_eq!(
+            hex::encode(core_proof(&token, &cn, &sn)),
+            "04015b7e21caea2a04b258c423d5984c7700acf37e50286387300d73e9f703bd"
+        );
         let client = hex::decode("ec822164700a79943961e68ad3d3ced9a4822b3a380f94e1cb966986e1dddb95").unwrap();
         assert!(client_proof_ok(&token, &cn, &sn, &client));
         assert!(!client_proof_ok(&token, &cn, &[9u8; 32], &client)); // a proof replayed against a fresh nonce
