@@ -1,0 +1,16 @@
+{
+  "name": "@keyhaven/sync-server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Zero-knowledge sync server. Stores ciphertext only.",
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "hono": "4.13.17",
+    "zod": "4.6.7"
+  }
+}

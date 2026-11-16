@@ -1,0 +1,17 @@
+{
+  "name": "@keyhaven/mcp-server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Thin MCP client for the Keyhaven core. Holds no keys.",
+  "bin": { "keyhaven-mcp": "./dist/index.js" },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.4.0",
+    "zod": "4.6.7"
+  }
+}
