@@ -3,7 +3,7 @@ use std::collections::VecDeque;
 use std::future::Future;
 use std::sync::Mutex;
 use std::time::Duration;
-use tokio::time::{timeout, Instant};
+use tokio::time::{Instant, timeout};
 
 #[derive(Clone, Debug)]
 pub struct ApprovalRequest {
@@ -102,8 +102,8 @@ impl<U: Prompt, P: Presence> ApprovalBroker<U, P> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::Arc;
+    use std::sync::atomic::{AtomicUsize, Ordering};
 
     struct Ui(Option<bool>); // None = nobody answers
     impl Prompt for Ui {
@@ -122,7 +122,13 @@ mod tests {
         }
     }
     fn req() -> ApprovalRequest {
-        ApprovalRequest { action: "fill", peer: "Claude (Anthropic, PBC)".into(), item_title: Some("GitHub".into()), target: Some("github.com".into()), reason_from_ai: None }
+        ApprovalRequest {
+            action: "fill",
+            peer: "Claude (Anthropic, PBC)".into(),
+            item_title: Some("GitHub".into()),
+            target: Some("github.com".into()),
+            reason_from_ai: None,
+        }
     }
     fn limits() -> Limits {
         Limits { max_pending: 3, per_window: 10, window: Duration::from_secs(600), ttl: Duration::from_secs(45) }

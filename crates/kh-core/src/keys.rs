@@ -1,8 +1,8 @@
 // crates/kh-crypto/src/keys.rs
 use argon2::{Algorithm, Argon2, Params, Version};
-use base64::{engine::general_purpose::URL_SAFE_NO_PAD as B64, Engine};
-use blake2::digest::{consts::U32, KeyInit, Mac};
+use base64::{Engine, engine::general_purpose::URL_SAFE_NO_PAD as B64};
 use blake2::Blake2bMac;
+use blake2::digest::{KeyInit, Mac, consts::U32};
 use serde::{Deserialize, Serialize};
 use unicode_normalization::UnicodeNormalization;
 use zeroize::Zeroizing;

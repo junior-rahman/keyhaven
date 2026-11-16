@@ -150,7 +150,8 @@ mod tests {
     #[test]
     fn defaults_and_wire_shape() {
         let item: ItemPayload =
-            serde_json::from_str(r#"{"type":"login","title":"GitHub","sites":[{"url":"https://github.com"}]}"#).unwrap();
+            serde_json::from_str(r#"{"type":"login","title":"GitHub","sites":[{"url":"https://github.com"}]}"#)
+                .unwrap();
         assert!(item.validate().is_ok());
         assert_eq!(item.ai, AiPolicy { visible: false, fill: Ask::Ask, totp: Ask::Never, reveal: Ask::Never });
         assert_eq!(item.created_by, Creator::You);

@@ -1,10 +1,10 @@
 // apps/desktop/src-tauri/src/hello.rs
-use windows::core::{factory, Result, HSTRING};
 use windows::Security::Credentials::UI::{UserConsentVerificationResult, UserConsentVerifier};
 use windows::Security::Credentials::{KeyCredentialCreationOption, KeyCredentialManager, KeyCredentialStatus};
 use windows::Security::Cryptography::CryptographicBuffer;
 use windows::Win32::Foundation::HWND;
 use windows::Win32::System::WinRT::IUserConsentVerifierInterop;
+use windows::core::{HSTRING, Result, factory};
 use windows_future::IAsyncOperation;
 
 /// Shows the Windows Hello dialog over the Keyhaven window and returns true only for a real

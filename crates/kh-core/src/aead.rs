@@ -1,6 +1,6 @@
 // crates/kh-crypto/src/aead.rs
 use crate::keys::{CryptoError, Key};
-use base64::{engine::general_purpose::URL_SAFE_NO_PAD as B64, Engine};
+use base64::{Engine, engine::general_purpose::URL_SAFE_NO_PAD as B64};
 use chacha20poly1305::aead::{Aead, KeyInit, Payload};
 use chacha20poly1305::{XChaCha20Poly1305, XNonce};
 use serde::{Deserialize, Serialize};
@@ -79,8 +79,14 @@ mod tests {
             let master = stretch_and_mix(case["password"].as_str().unwrap(), &sk, &p).unwrap();
             eprintln!("argon2id {} MiB x{}: {:?}", p.memory_kib / 1024, p.passes, t.elapsed());
             assert_eq!(hex::encode(&master[..]), case["master"].as_str().unwrap());
-            assert_eq!(hex::encode(&derive_subkey(&master, SUBKEY_AUTH, VAULT_CONTEXT)[..]), case["auth"].as_str().unwrap());
-            assert_eq!(hex::encode(&derive_subkey(&master, SUBKEY_KEK, VAULT_CONTEXT)[..]), case["kek"].as_str().unwrap());
+            assert_eq!(
+                hex::encode(&derive_subkey(&master, SUBKEY_AUTH, VAULT_CONTEXT)[..]),
+                case["auth"].as_str().unwrap()
+            );
+            assert_eq!(
+                hex::encode(&derive_subkey(&master, SUBKEY_KEK, VAULT_CONTEXT)[..]),
+                case["kek"].as_str().unwrap()
+            );
         }
     }
 
