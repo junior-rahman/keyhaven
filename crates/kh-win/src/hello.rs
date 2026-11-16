@@ -12,8 +12,12 @@ use windows_future::IAsyncOperation;
 /// Call it from a worker thread: `join` blocks until the dialog closes.
 pub fn verify_presence(window: HWND, message: &str) -> Result<bool> {
     let interop = factory::<UserConsentVerifier, IUserConsentVerifierInterop>()?;
+    let message = HSTRING::from(message);
+    // SAFETY: `window` is the caller's top-level window handle; Windows only uses it to parent the dialog
+    // and fails the call (rather than misbehaving) if the handle is not a valid window. `message` is an
+    // owned HSTRING that outlives the call.
     let pending: IAsyncOperation<UserConsentVerificationResult> =
-        unsafe { interop.RequestVerificationForWindowAsync(window, &HSTRING::from(message))? };
+        unsafe { interop.RequestVerificationForWindowAsync(window, &message)? };
     Ok(pending.join()? == UserConsentVerificationResult::Verified)
 }
 
