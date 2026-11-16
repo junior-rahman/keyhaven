@@ -3,6 +3,9 @@ name = "kh_core"
 version = "0.1.0"
 edition = "2024"
 
+[lints]
+workspace = true
+
 [dependencies]
 argon2 = "0.6.0"
 base64 = "0.23.1"
