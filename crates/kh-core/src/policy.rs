@@ -94,6 +94,9 @@ mod tests {
     const AI: Caller = Caller::Ai { read: true, write: true, fill: true, reveal: true };
     const STD: Settings = Settings { locked: false, strict: false, ai_enabled: true, ai_reveal_enabled: false };
 
+    /// One row of the decision table: who asks, about which item, to do what, under which settings, and the answer.
+    type Case<'a> = (Caller, Option<&'a ItemPayload>, Action, &'a Settings, Result<Gate, Deny>);
+
     fn item(json: &str) -> ItemPayload {
         serde_json::from_str(json).unwrap()
     }
@@ -111,7 +114,7 @@ mod tests {
         let cli_granted = Caller::Cli { console_grant: true };
         let read_only = Caller::Ai { read: true, write: false, fill: false, reveal: false };
 
-        let cases: &[(Caller, Option<&ItemPayload>, Action, &Settings, Result<Gate, Deny>)] = &[
+        let cases: &[Case] = &[
             // AI clients
             (AI, None, Search, &STD, Ok(Gate::Open)),
             (AI, Some(&bank), ReadMeta, &STD, Err(Deny::NotFound)),
