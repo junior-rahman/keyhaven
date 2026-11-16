@@ -2,6 +2,7 @@
 name = "kh_win"
 version = "0.1.0"
 edition = "2024"
+publish = false
 
 # Cargo cannot override one inherited lint, so kh-win states its own set.
 # It is the only crate allowed `unsafe`, and every block must carry a // SAFETY: comment.
